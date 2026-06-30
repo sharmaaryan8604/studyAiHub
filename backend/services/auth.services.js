@@ -4,7 +4,7 @@ import {
     comparePassword,
 } from "../utils/password.utils.js";
 import generateToken from "../utils/token.utils.js";
-import ApiError from "../utils/ApiError.js";
+import ApiError from "../utils/apiError.utils.js";
 
 
 // Register User
