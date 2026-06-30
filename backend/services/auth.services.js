@@ -4,6 +4,7 @@ import {
     comparePassword,
 } from "../utils/password.utils.js";
 import generateToken from "../utils/token.utils.js";
+import ApiError from "../utils/ApiError.js";
 
 
 // Register User
@@ -13,14 +14,14 @@ export const registerUser = async (userData) => {
 
     // Validate input
     if (!name || !email || !password) {
-        throw new Error("All fields are required");
+        throw new ApiError(400,"All fields are required");
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-        throw new Error("User already exists");
+        throw new ApiError(409,"User already exists");
     }
 
     // Hash password
@@ -63,14 +64,14 @@ export const loginUser = async (loginData) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-        throw new Error("User not found");
+        throw new ApiError(404,"User not found");
     }
 
     // Compare password
     const isMatch = await comparePassword(password, user.password);
 
     if (!isMatch) {
-        throw new Error("Invalid credentials");
+        throw new ApiError(401,"Invalid credentials");
     }
 
     // Generate JWT
