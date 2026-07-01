@@ -5,6 +5,8 @@ import connectDb from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js"
 import errorMiddleware from "./middleware/error.middleware.js";
 import userRoutes from "./routes/user.routes.js";
+import noteRoutes from "./routes/note.routes.js";
+
 
 
 dotenv.config();
@@ -19,6 +21,8 @@ app.use('/api/auth',authRoutes);
 
 app.use(errorMiddleware);
 app.use("/api/user", userRoutes);
+
+app.use("/api/notes",noteRoutes);
 
 
 
