@@ -39,6 +39,19 @@ const noteSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
+        summary: {
+            type: String,
+            default: "",
+        },
+        quiz: {
+            type: String,
+            default: "",
+        },
+
+        flashcards: {
+            type: Array,
+            default: [],
+        },
     },
     {
         timestamps: true,

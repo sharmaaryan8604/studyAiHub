@@ -1,16 +1,13 @@
+import "./config/env.js";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectDb from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js"
 import errorMiddleware from "./middleware/error.middleware.js";
 import userRoutes from "./routes/user.routes.js";
 import noteRoutes from "./routes/note.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
-
-
-
-dotenv.config();
+import aiRoutes from "./routes/ai.routes.js";
 
 connectDb();
 const app=express();
@@ -25,6 +22,9 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/notes",noteRoutes);
 app.use("/api/upload", uploadRoutes);
+
+
+app.use("/api/ai", aiRoutes);
 
 
 
