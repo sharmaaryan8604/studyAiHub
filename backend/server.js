@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes.js"
 import errorMiddleware from "./middleware/error.middleware.js";
 import userRoutes from "./routes/user.routes.js";
 import noteRoutes from "./routes/note.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
 
 
 
@@ -23,6 +24,7 @@ app.use(errorMiddleware);
 app.use("/api/user", userRoutes);
 
 app.use("/api/notes",noteRoutes);
+app.use("/api/upload", uploadRoutes);
 
 
 
