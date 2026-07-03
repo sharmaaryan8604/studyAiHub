@@ -16,7 +16,7 @@ const Navbar = () => {
     const { isDarkTheme } = useTheme();
 
     const title =
-        routeTitles[location.pathname] ?? "StudyAI Hub";
+        routeTitles[location.pathname] ?? "Study AI Hub";
 
     return (
         <header

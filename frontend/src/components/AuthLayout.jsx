@@ -1,3 +1,5 @@
+import BrandLogo from "./BrandLogo";
+
 const AuthLayout = ({
     title,
     subtitle,
@@ -17,9 +19,7 @@ const AuthLayout = ({
                 <section className="relative flex flex-col justify-between overflow-hidden px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
 
                     <div className="auth-rise">
-                        <p className="text-xs font-semibold uppercase tracking-[0.38em] text-[#a1662f]">
-                            StudyAI Hub
-                        </p>
+                        <BrandLogo />
 
                         <h1 className="mt-5 max-w-xl font-serif text-5xl leading-[1.05] text-[#1f2937] sm:text-6xl">
                             A calmer desk for focused study.

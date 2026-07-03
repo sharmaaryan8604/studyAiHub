@@ -9,6 +9,7 @@ import {
     FiTarget,
 } from "react-icons/fi";
 
+import BrandLogo from "../BrandLogo";
 import useAuth from "../../hooks/useAuth";
 import useTheme from "../../hooks/useTheme";
 
@@ -61,9 +62,15 @@ const Sidebar = () => {
                             : "bg-white"
                     }`}
                 >
-                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-500">
-                        StudyAI Hub
-                    </p>
+                    <BrandLogo
+                        compact
+                        className="items-start"
+                        textClassName={
+                            isDarkTheme
+                                ? "text-[#f0d8a7]"
+                                : "text-[#6B4507]"
+                        }
+                    />
                     <h1 className="mt-3 text-2xl font-bold">
                         Focus mode for smarter study sessions.
                     </h1>
