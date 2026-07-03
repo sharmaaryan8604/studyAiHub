@@ -1,48 +1,67 @@
-const NoteCard = ({ note, onEdit, onDelete }) => {
+const NoteCard = ({
+    note,
+    onEdit,
+    onDelete,
+    onSummary,
+}) => {
     return (
-        <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition">
+        <div className="bg-white rounded-xl shadow-lg p-5 hover:shadow-xl transition">
 
-            <div className="flex justify-between items-start">
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-800">
+                {note.title}
+            </h2>
 
-                <h2 className="text-xl font-bold">
-                    {note.title}
-                </h2>
+            {/* Category */}
+            <p className="text-blue-600 mt-2 font-medium">
+                {note.category}
+            </p>
 
-                {note.isFavorite && (
-                    <span className="text-yellow-500 text-xl">
-                        ⭐
-                    </span>
-                )}
-
-            </div>
-
-            <p className="text-gray-600 mt-3 line-clamp-3">
+            {/* Content */}
+            <p className="text-gray-600 mt-4 line-clamp-5">
                 {note.content}
             </p>
 
-            <div className="flex justify-between items-center mt-5">
-
-                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                    {note.category}
-                </span>
-
-                <div className="space-x-3">
-
-                    <button
-                        onClick={() => onEdit(note)}
-                        className="text-blue-600 font-semibold"
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mt-4">
+                {note.tags?.map((tag, index) => (
+                    <span
+                        key={index}
+                        className="bg-gray-200 px-3 py-1 rounded-full text-sm"
                     >
-                        Edit
-                    </button>
+                        #{tag}
+                    </span>
+                ))}
+            </div>
 
-                    <button
-                        onClick={() => onDelete(note._id)}
-                        className="text-red-600 font-semibold"
-                    >
-                        Delete
-                    </button>
+            {/* Date */}
+            <p className="text-gray-400 text-sm mt-5">
+                {new Date(note.createdAt).toLocaleDateString()}
+            </p>
 
-                </div>
+            {/* Buttons */}
+            <div className="flex flex-wrap gap-3 mt-6">
+
+                <button
+                    onClick={() => onEdit(note)}
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg transition"
+                >
+                    ✏️ Edit
+                </button>
+
+                <button
+                    onClick={() => onSummary(note)}
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition"
+                >
+                    🧠 AI Summary
+                </button>
+
+                <button
+                    onClick={() => onDelete(note._id)}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition"
+                >
+                    🗑 Delete
+                </button>
 
             </div>
 

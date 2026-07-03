@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import NoteCard from "../../components/notes/NoteCard";
 import NoteModal from "../../components/notes/NoteModal";
+import SummaryModal from "../../components/notes/SummaryModal";
 
 import {
     getAllNotes,
@@ -11,22 +12,35 @@ import {
     deleteNote,
 } from "../../services/note.service";
 
+import { generateSummary } from "../../services/ai.service";
+
 const Notes = () => {
+    // =========================
+    // State
+    // =========================
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [summaryModalOpen, setSummaryModalOpen] = useState(false);
+    const [summaryLoading, setSummaryLoading] = useState(false);
+    const [summaryText, setSummaryText] = useState("");
+    const [summaryTitle, setSummaryTitle] = useState("");
 
+    // =========================
+    // Initial Load
+    // =========================
     useEffect(() => {
         fetchNotes();
     }, []);
 
-  
+    // =========================
     // Fetch Notes
-    
+    // =========================
     const fetchNotes = async () => {
         try {
             setLoading(true);
@@ -35,13 +49,15 @@ const Notes = () => {
 
             setNotes(data.notes);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         } finally {
             setLoading(false);
         }
     };
 
+    // =========================
     // Create / Update Note
+    // =========================
     const handleSaveNote = async (noteData) => {
         try {
             if (selectedNote) {
@@ -55,11 +71,13 @@ const Notes = () => {
 
             fetchNotes();
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
+    // =========================
     // Delete Note
+    // =========================
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this note?"
@@ -74,19 +92,42 @@ const Notes = () => {
                 prev.filter((note) => note._id !== id)
             );
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     };
 
+    // =========================
     // Edit Note
+    // =========================
     const handleEdit = (note) => {
         setSelectedNote(note);
         setIsModalOpen(true);
     };
 
-   
+    // =========================
+    // AI Summary
+    // =========================
+    const handleSummary = async (note) => {
+        try {
+            setSummaryModalOpen(true);
+            setSummaryLoading(true);
+
+            setSummaryTitle(note.title);
+
+            const data = await generateSummary(note._id);
+
+            setSummaryText(data.summary);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to generate summary.");
+        } finally {
+            setSummaryLoading(false);
+        }
+    };
+
+    // =========================
     // Search Filter
-    
+    // =========================
     const filteredNotes = notes.filter((note) => {
         const search = searchTerm.toLowerCase();
 
@@ -135,9 +176,7 @@ const Notes = () => {
                     </h2>
                 </div>
             ) : filteredNotes.length === 0 ? (
-                // Empty State
                 <div className="bg-white rounded-xl shadow p-10 text-center">
-
                     <h2 className="text-2xl font-bold">
                         No Notes Found 📄
                     </h2>
@@ -145,25 +184,22 @@ const Notes = () => {
                     <p className="text-gray-500 mt-3">
                         Create your first study note.
                     </p>
-
                 </div>
             ) : (
-                // Notes Grid
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
                     {filteredNotes.map((note) => (
                         <NoteCard
                             key={note._id}
                             note={note}
                             onEdit={handleEdit}
                             onDelete={handleDelete}
+                            onSummary={handleSummary}
                         />
                     ))}
-
                 </div>
             )}
 
-            {/* Modal */}
+            {/* Create / Edit Note */}
             <NoteModal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -172,6 +208,19 @@ const Notes = () => {
                 }}
                 onSave={handleSaveNote}
                 note={selectedNote}
+            />
+
+            {/* AI Summary */}
+            <SummaryModal
+                isOpen={summaryModalOpen}
+                onClose={() => {
+                    setSummaryModalOpen(false);
+                    setSummaryText("");
+                    setSummaryTitle("");
+                }}
+                loading={summaryLoading}
+                summary={summaryText}
+                title={summaryTitle}
             />
         </DashboardLayout>
     );
