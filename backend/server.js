@@ -15,7 +15,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://study-ai-hub-psi.vercel.app/",
+      "https://study-ai-hub-psi.vercel.app",
     ],
     credentials: true,
   })
