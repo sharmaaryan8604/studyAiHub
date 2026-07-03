@@ -11,8 +11,15 @@ import aiRoutes from "./routes/ai.routes.js";
 
 connectDb();
 const app=express();
-
-app.use(cors());
+pp.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://study-ai-hub-psi.vercel.app/",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use('/api/auth',authRoutes);
