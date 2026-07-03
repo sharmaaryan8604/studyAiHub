@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import api from "../api/axios.js";
 
 const AuthContext = createContext();
@@ -27,11 +28,16 @@ export const AuthProvider = ({ children }) => {
             // Save User
             setUser(user);
 
+            toast.success("Welcome back.");
+
             return true;
         } catch (error) {
             console.error(error.response?.data || error.message);
 
-            alert(error.response?.data?.message || "Login Failed");
+            toast.error(
+                error.response?.data?.message ||
+                    "Login failed"
+            );
 
             return false;
         } finally {
@@ -58,11 +64,16 @@ export const AuthProvider = ({ children }) => {
 
             setUser(user);
 
+            toast.success("Account created.");
+
             return true;
         } catch (error) {
             console.error(error.response?.data || error.message);
 
-            alert(error.response?.data?.message || "Registration Failed");
+            toast.error(
+                error.response?.data?.message ||
+                    "Registration failed"
+            );
 
             return false;
         } finally {

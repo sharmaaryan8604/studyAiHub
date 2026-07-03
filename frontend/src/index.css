@@ -2,3 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html,
+    body,
+    #root {
+        min-height: 100%;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-900 antialiased transition-colors duration-300;
+    }
+
+    .dark body {
+        @apply bg-slate-950 text-slate-100;
+    }
+}
+
+@layer utilities {
+    @keyframes drift {
+        0%,
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+        50% {
+            transform: translate3d(0, -14px, 0);
+        }
+    }
+
+    @keyframes riseIn {
+        0% {
+            opacity: 0;
+            transform: translate3d(0, 32px, 0) scale(0.98);
+        }
+        100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+        }
+    }
+
+    @keyframes pulseGlow {
+        0%,
+        100% {
+            opacity: 0.45;
+        }
+        50% {
+            opacity: 0.9;
+        }
+    }
+
+    .auth-rise {
+        animation: riseIn 0.8s cubic-bezier(0.22, 1, 0.36, 1)
+            both;
+    }
+
+    .auth-rise-delay {
+        animation: riseIn 0.95s
+            cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+    }
+
+    .auth-drift {
+        animation: drift 7s ease-in-out infinite;
+    }
+
+    .auth-glow {
+        animation: pulseGlow 5.5s ease-in-out infinite;
+    }
+}
+

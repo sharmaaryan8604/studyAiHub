@@ -5,8 +5,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/protectedRoute";
 import Notes from "./pages/notes/Notes.jsx";
+import QuizGenerator from "./pages/QuizGenerator.jsx";
+import Settings from "./pages/Settings.jsx";
 
 function App() {
     return (
@@ -36,6 +38,22 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <Notes />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/quiz"
+                    element={
+                        <ProtectedRoute>
+                            <QuizGenerator />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/settings"
+                    element={
+                        <ProtectedRoute>
+                            <Settings />
                         </ProtectedRoute>
                     }
                 />

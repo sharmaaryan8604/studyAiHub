@@ -1,29 +1,29 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 
 import AuthLayout from "../components/AuthLayout";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import Button from "../components/button";
+import Input from "../components/input";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
     const navigate = useNavigate();
     const { login, loading } = useAuth();
-
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
 
-    const handleChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
+    const handleChange = (event) => {
+        setFormData((current) => ({
+            ...current,
+            [event.target.name]: event.target.value,
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
         const success = await login(
             formData.email,
@@ -37,16 +37,18 @@ const Login = () => {
 
     return (
         <AuthLayout
-            title="Welcome Back 👋"
-            subtitle="Login to continue your study journey"
+            title="Welcome back"
+            subtitle="Log in to pick up exactly where your last study session left off."
         >
-            <form onSubmit={handleSubmit} className="space-y-5">
-
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-5"
+            >
                 <Input
                     label="Email"
                     type="email"
                     name="email"
-                    placeholder="Enter your email"
+                    placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
                 />
@@ -60,22 +62,28 @@ const Login = () => {
                     onChange={handleChange}
                 />
 
+                
+
                 <Button
                     type="submit"
                     disabled={loading}
                 >
-                    {loading ? "Logging in..." : "Login"}
+                    <span className="inline-flex items-center justify-center gap-2">
+                        {loading
+                            ? "Logging in..."
+                            : "Enter Personal Library"}
+                        {!loading ? <FiArrowRight /> : null}
+                    </span>
                 </Button>
-
             </form>
 
-            <p className="text-center mt-6 text-sm text-slate-600">
-                Don't have an account?{" "}
+            <p className="mt-6 text-center text-sm text-slate-600">
+                Don&apos;t have an account?{" "}
                 <Link
                     to="/register"
-                    className="text-blue-600 font-semibold hover:underline"
+                    className="font-semibold text-[#a1662f] transition hover:text-slate-900"
                 >
-                    Register
+                    Create one
                 </Link>
             </p>
         </AuthLayout>

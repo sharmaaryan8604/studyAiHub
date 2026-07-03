@@ -1,49 +1,99 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
+
 import AuthLayout from "../components/AuthLayout";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import Button from "../components/button";
+import Input from "../components/input";
+import useAuth from "../hooks/useAuth";
 
 const Register = () => {
+    const navigate = useNavigate();
+    const { register, loading } = useAuth();
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    });
+
+    const handleChange = (event) => {
+        setFormData((current) => ({
+            ...current,
+            [event.target.name]: event.target.value,
+        }));
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const success = await register(
+            formData.name,
+            formData.email,
+            formData.password
+        );
+
+        if (success) {
+            navigate("/dashboard");
+        }
+    };
+
     return (
         <AuthLayout
-            title="Create Account 🚀"
-            subtitle="Start learning smarter with AI"
+            title="Create your account"
+            subtitle="Set up your study space and keep your notes, uploads, and quizzes in one place."
         >
-            <form className="space-y-5">
-
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-5"
+            >
                 <Input
                     label="Name"
-                    placeholder="Enter your name"
+                    name="name"
+                    placeholder="Your full name"
+                    value={formData.name}
+                    onChange={handleChange}
                 />
 
                 <Input
                     label="Email"
                     type="email"
-                    placeholder="Enter your email"
+                    name="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
                 />
 
                 <Input
                     label="Password"
                     type="password"
-                    placeholder="Create password"
+                    name="password"
+                    placeholder="Create a password"
+                    value={formData.password}
+                    onChange={handleChange}
                 />
 
-                <Button>
-                    Register
+                <Button
+                    type="submit"
+                    disabled={loading}
+                >
+                    <span className="inline-flex items-center justify-center gap-2">
+                        {loading
+                            ? "Creating account..."
+                            : "Create account"}
+                        {!loading ? <FiArrowRight /> : null}
+                    </span>
                 </Button>
-
             </form>
 
-            <p className="text-center text-sm mt-6 text-slate-600">
+            <p className="mt-6 text-center text-sm text-slate-600">
                 Already have an account?{" "}
                 <Link
                     to="/"
-                    className="text-blue-600 font-semibold"
+                    className="font-semibold text-[#a1662f] transition hover:text-slate-900"
                 >
-                    Login
+                    Log in
                 </Link>
             </p>
-
         </AuthLayout>
     );
 };
