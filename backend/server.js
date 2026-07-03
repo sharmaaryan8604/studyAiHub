@@ -32,7 +32,7 @@ app.use("/api/upload", uploadRoutes);
 
 
 app.use("/api/ai", aiRoutes);
-app.use(errorMiddleware);
+
 
 
 
@@ -42,6 +42,7 @@ app.get('/',(req,res)=>{
         message:"Study Hub backend running",
     });
 })
+app.use(errorMiddleware);
 
 
 const PORT = process.env.PORT || 5000;
