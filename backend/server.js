@@ -11,7 +11,7 @@ import aiRoutes from "./routes/ai.routes.js";
 
 connectDb();
 const app=express();
-pp.use(
+app.use(
   cors({
     origin: [
       "http://localhost:5173",
