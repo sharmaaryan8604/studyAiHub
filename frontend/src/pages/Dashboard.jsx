@@ -73,17 +73,7 @@ const Dashboard = () => {
                             <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl">
                                 Welcome back, {user?.name || "there"}.
                             </h1>
-                            <p
-                                className={`mt-4 max-w-xl text-base leading-8 ${
-                                    isDarkTheme
-                                        ? "text-slate-300"
-                                        : "text-slate-600"
-                                }`}
-                            >
-                                The dashboard is trimmed down to the
-                                tools you actually need right now:
-                                notes, quiz generation, and settings.
-                            </p>
+                            
                         </div>
 
                         <div
@@ -122,7 +112,7 @@ const Dashboard = () => {
                                         Active tools
                                     </span>
                                     <span className="font-semibold">
-                                        3
+                                        2
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">

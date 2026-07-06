@@ -39,17 +39,7 @@ const Settings = () => {
                     <h1 className="mt-3 text-4xl font-bold">
                         Keep the workspace feeling like yours.
                     </h1>
-                    <p
-                        className={`mt-4 max-w-xl text-base leading-8 ${
-                            isDarkTheme
-                                ? "text-slate-300"
-                                : "text-slate-600"
-                        }`}
-                    >
-                        Theme and session controls live here as well
-                        as in the sidebar, so you can manage the app
-                        without hunting around.
-                    </p>
+                    
                 </section>
 
                 <div className="space-y-6">

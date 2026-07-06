@@ -57,7 +57,10 @@ export const loginUser = async (loginData) => {
 
     // Validate input
     if (!email || !password) {
-        throw new Error("Email and password are required");
+        throw new ApiError(
+            400,
+            "Email and password are required"
+        );
     }
 
     // Find user

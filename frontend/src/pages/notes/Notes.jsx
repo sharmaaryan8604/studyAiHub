@@ -13,7 +13,9 @@ import {
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import NoteCard from "../../components/notes/NoteCard";
 import NoteModal from "../../components/notes/NoteModal";
+import SummaryModal from "../../components/notes/SummaryModal";
 import UploadModal from "../../components/upload/UploadModal";
+import { generateSummary } from "../../services/ai.service";
 
 import {
     createNote,
@@ -29,6 +31,10 @@ const Notes = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
     const [uploadOpen, setUploadOpen] = useState(false);
+    const [summaryOpen, setSummaryOpen] = useState(false);
+    const [summaryLoading, setSummaryLoading] = useState(false);
+    const [summaryText, setSummaryText] = useState("");
+    const [summaryTitle, setSummaryTitle] = useState("");
 
     useEffect(() => {
         fetchNotes();
@@ -92,6 +98,35 @@ const Notes = () => {
         setIsModalOpen(true);
     };
 
+    const handleSummary = async (note) => {
+        setSummaryOpen(true);
+        setSummaryTitle(note.title);
+        setSummaryText(note.summary ?? "");
+        setSummaryLoading(true);
+
+        try {
+            const data = await generateSummary(note._id);
+            const nextSummary = data.summary ?? "";
+
+            setSummaryText(nextSummary);
+            setNotes((prevNotes) =>
+                prevNotes.map((currentNote) =>
+                    currentNote._id === note._id
+                        ? {
+                              ...currentNote,
+                              summary: nextSummary,
+                          }
+                        : currentNote
+                )
+            );
+        } catch (error) {
+            console.error(error);
+            toast.error("Couldn't generate a summary.");
+        } finally {
+            setSummaryLoading(false);
+        }
+    };
+
     const filteredNotes = notes.filter((note) => {
         const search = searchTerm.toLowerCase();
 
@@ -124,7 +159,7 @@ const Notes = () => {
     return (
         <DashboardLayout>
             <div className="space-y-8">
-                <section className="relative overflow-hidden rounded-[32px] bg-slate-900 px-6 py-8 text-white shadow-[0_30px_90px_-40px_rgba(15,23,42,0.9)] sm:px-8">
+                <section className="relative overflow-hidden rounded-[28px] bg-slate-900 px-4 py-6 text-white shadow-[0_30px_90px_-40px_rgba(15,23,42,0.9)] sm:rounded-[32px] sm:px-8 sm:py-8">
                     <div className="absolute -right-16 top-0 h-40 w-40 rounded-full bg-sky-400/20 blur-3xl" />
                     <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-emerald-400/15 blur-3xl" />
 
@@ -133,7 +168,7 @@ const Notes = () => {
                             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-300">
                                 Notes Dashboard
                             </p>
-                            <h1 className="mt-3 text-4xl font-bold sm:text-5xl">
+                            <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-5xl">
                                 Upload, search, and study from one clean workspace.
                             </h1>
                             <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
@@ -168,7 +203,7 @@ const Notes = () => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 xl:min-w-[360px]">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:min-w-[360px]">
                             <div className="rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur">
                                 <div className="flex items-center gap-3 text-sky-200">
                                     <FiBookOpen />
@@ -220,10 +255,10 @@ const Notes = () => {
                     </div>
                 </section>
 
-                <section className="rounded-[28px] border border-slate-200 bg-white/90 p-5 shadow-[0_20px_70px_-45px_rgba(15,23,42,0.45)] backdrop-blur sm:p-6">
+                <section className="rounded-[24px] border border-slate-200 bg-white/90 p-4 shadow-[0_20px_70px_-45px_rgba(15,23,42,0.45)] backdrop-blur sm:rounded-[28px] sm:p-6">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
-                            <h2 className="text-2xl font-bold text-slate-900">
+                            <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
                                 Your library
                             </h2>
                             <p className="mt-1 text-sm text-slate-500">
@@ -262,11 +297,11 @@ const Notes = () => {
                         ))}
                     </div>
                 ) : filteredNotes.length === 0 ? (
-                    <div className="rounded-[32px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center shadow-[0_20px_70px_-50px_rgba(15,23,42,0.4)]">
+                    <div className="rounded-[28px] border border-dashed border-slate-300 bg-white px-4 py-12 text-center shadow-[0_20px_70px_-50px_rgba(15,23,42,0.4)] sm:rounded-[32px] sm:px-6 sm:py-14">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-100 text-sky-600">
                             <FiUploadCloud className="text-2xl" />
                         </div>
-                        <h2 className="mt-5 text-2xl font-bold text-slate-900">
+                        <h2 className="mt-5 text-xl font-bold text-slate-900 sm:text-2xl">
                             {searchTerm
                                 ? "No notes match your search."
                                 : "No notes available yet."}
@@ -298,6 +333,7 @@ const Notes = () => {
                                 note={note}
                                 onDelete={handleDelete}
                                 onEdit={handleEdit}
+                                onSummary={handleSummary}
                             />
                         ))}
                     </div>
@@ -318,6 +354,19 @@ const Notes = () => {
                 }}
                 onSave={handleSaveNote}
                 note={selectedNote}
+            />
+
+            <SummaryModal
+                isOpen={summaryOpen}
+                onClose={() => {
+                    setSummaryOpen(false);
+                    setSummaryLoading(false);
+                    setSummaryText("");
+                    setSummaryTitle("");
+                }}
+                loading={summaryLoading}
+                summary={summaryText}
+                title={summaryTitle}
             />
         </DashboardLayout>
     );
